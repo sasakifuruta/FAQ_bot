@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  dynamodb:
+    image: amazon/dynamodb-local:latest
+    container_name: dynamodb-local
+    ports:
+      - "8001:8000"
+    command: "-jar DynamoDBLocal.jar -sharedDb"
+    volumes:
+      - dynamodb_data:/home/dynamodblocal/data
+
+  opensearch:
+    image: opensearchproject/opensearch:2.11.0
+    container_name: opensearch-local
+    environment:
+      - discovery.type=single-node
+      - DISABLE_SECURITY_PLUGIN=true
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+
+
+  api:
+    build: .
+    container_name: faq-bot-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - dynamodb
+      - opensearch
+    environment:
+      AWS_REGION: ap-northeast-1
+      AWS_ACCESS_KEY_ID: dummy
+      AWS_SECRET_ACCESS_KEY: dummy
+      DYNAMODB_ENDPOINT: http://dynamodb:8000
+      OPENSEARCH_ENDPOINT: http://opensearch:9200
+
+volumes:
+  dynamodb_data:
+  opensearch_data:
