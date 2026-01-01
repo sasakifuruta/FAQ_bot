@@ -2,6 +2,7 @@
 # from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from pydantic import BaseModel
+from mangum import Mangum
 # from rag.qa import ask_question
 
 app = FastAPI()
