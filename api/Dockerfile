@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM public.ecr.aws/lambda/python:3.11
 
 WORKDIR /var/task
 
@@ -7,4 +7,4 @@ RUN pip install -r requirements.txt
 
 COPY app.py .
 
-CMD ["python", "app.py"] 
+CMD ["app.handler"]
