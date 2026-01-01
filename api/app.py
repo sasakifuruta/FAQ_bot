@@ -1,10 +1,10 @@
-# # app.py
+# app.py
 # from fastapi.middleware.cors import CORSMiddleware
-# from fastapi import FastAPI
-# from pydantic import BaseModel
-# from rag.qa import ask_question
+from fastapi import FastAPI
+from pydantic import BaseModel
+from rag.qa import ask_question
 
-# app = FastAPI()
+app = FastAPI()
 
 
 # origins = [
@@ -20,9 +20,9 @@
 # )
 
 
-# class AskRequest(BaseModel):
-#     question: str
-#     top_k: int = 5
+class AskRequest(BaseModel):
+    question: str
+    top_k: int = 5
 
 
 # @app.on_event("startup")
@@ -33,24 +33,20 @@
 #         print(f"[WARN] index init failed: {e}")
 
 
-# @app.post("/api/ask")
-# def ask(req: AskRequest):
-#     result = ask_question(
-#         question=req.question,
-#         top_k=req.top_k
-#     )
-#     return result
+@app.post("/api/ask")
+def ask(req: AskRequest):
+    result = ask_question(
+        question=req.question,
+        top_k=req.top_k,
+        message="received"
+    )
+    return result
 
 
 # =====================
 # Lambda用入り口
 # =====================
 
-# app.py
-from fastapi import FastAPI
-from mangum import Mangum
-
-app = FastAPI()
 
 @app.get("/hello")
 def hello():
