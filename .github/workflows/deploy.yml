@@ -1,0 +1,47 @@
+name: Deploy Lambda
+
+on:
+  push:
+    branches:
+      - main   # mainブランチにpushされたら実行
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. コードをチェックアウト
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. AWS CLIセットアップ
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # 3. ECR login
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # 4. Dockerイメージビルド & タグ付け
+      - name: Build Docker image
+        run: |
+          IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/faq-lambda:latest
+          docker build -t $IMAGE_URI ./api
+          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
+
+      # 5. DockerイメージをECRにpush
+      - name: Push to ECR
+        run: |
+          docker push $IMAGE_URI
+
+      # 6. Lambdaにイメージ更新
+      - name: Update Lambda function
+        run: |
+          aws lambda update-function-code \
+            --function-name faq-lambda \
+            --image-uri $IMAGE_URI
