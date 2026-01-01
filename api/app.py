@@ -35,13 +35,20 @@ class AskRequest(BaseModel):
 
 
 @app.post("/api/ask")
+# def ask(req: AskRequest):
+#     result = ask_question(
+#         question=req.question,
+#         top_k=req.top_k,
+#         message="received"
+#     )
+#     return result
+@app.post("/api/ask")
 def ask(req: AskRequest):
-    result = ask_question(
-        question=req.question,
-        top_k=req.top_k,
-        message="received"
-    )
-    return result
+    return {
+        "question": req.question,
+        "top_k": req.top_k,
+        "message": "received"
+    }
 
 
 # =====================
