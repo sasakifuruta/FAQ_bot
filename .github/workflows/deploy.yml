@@ -3,7 +3,8 @@ name: Deploy Lambda
 on:
   push:
     branches:
-      - main   # mainブランチにpushされたら実行
+      - main
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
