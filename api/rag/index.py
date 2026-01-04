@@ -1,19 +1,14 @@
 # rag/index.py
-from opensearchpy import OpenSearch, helpers
-from repository.docs import get_doc_chunks
-from rag.embed import embed_text
 from dotenv import load_dotenv
+from opensearchpy import helpers
+from repository.docs import get_doc_chunks
+from rag.opensearch_client import get_opensearch_client
+from rag.embed import embed_text
 
 load_dotenv()
 
 INDEX_NAME = "docs_chunks"
 
-def get_client():
-    return OpenSearch(
-        hosts=[{"host": "opensearch", "port": 9200}],
-        http_auth=None,
-        use_ssl=False
-    )
 
 def create_index_if_not_exists(client):
     if not client.indices.exists(index=INDEX_NAME):
@@ -70,6 +65,6 @@ def bulk_index_chunks(client, doc_id: str):
 
 # テスト実行用
 if __name__ == "__main__":
-    client = get_client()
+    client = get_opensearch_client()
     create_index_if_not_exists(client)
     bulk_index_chunks(client, "vpn-manual")

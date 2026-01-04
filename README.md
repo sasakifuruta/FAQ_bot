@@ -19,9 +19,12 @@ DynamoDB にナレッジを保存し、OpenSearch のベクトル検索で関連
 ## 起動方法
 
 ```bash
-# コンテナビルド & 起動
+# APIコンテナビルド & 起動
+cd /FAQ_bot/api
 docker compose build --no-cache
 docker compose up -d
 
-# API コンテナに入って初回データ投入（任意）
-docker compose exec api python -m rag.index
+# Remixサーバ起動
+cd /FAQ_bot/web
+npm run dev
+http://localhost:5173/ask

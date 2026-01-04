@@ -1,4 +1,6 @@
 # rag/qa.py
+import os
+from urllib.parse import urlparse
 from rag.embed import embed_text
 from rag.llm import generate_answer
 from opensearchpy import OpenSearch
@@ -8,12 +10,6 @@ load_dotenv()
 
 INDEX_NAME = "docs_chunks"
 
-def get_client():
-    return OpenSearch(
-        hosts=[{"host": "opensearch", "port": 9200}],
-        http_auth=None,
-        use_ssl=False
-    )
 
 def ask_question(question: str, top_k: int = 5) -> dict:
     """
@@ -23,7 +19,8 @@ def ask_question(question: str, top_k: int = 5) -> dict:
     4. LLM で回答生成
     5. sources 付きで返す
     """
-    client = get_client()
+
+    client = get_opensearch_client()
 
     # 1. embedding
     query_embedding = embed_text(question)

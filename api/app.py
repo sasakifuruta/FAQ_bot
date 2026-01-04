@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from mangum import Mangum
-# from rag.qa import ask_question
+from rag.qa import ask_question
 
 app = FastAPI()
 
@@ -35,20 +35,12 @@ class AskRequest(BaseModel):
 
 
 @app.post("/api/ask")
-# def ask(req: AskRequest):
-#     result = ask_question(
-#         question=req.question,
-#         top_k=req.top_k,
-#         message="received"
-#     )
-#     return result
-@app.post("/api/ask")
 def ask(req: AskRequest):
-    return {
-        "question": req.question,
-        "top_k": req.top_k,
-        "message": "received"
-    }
+    result = ask_question(
+        question=req.question,
+        top_k=req.top_k,
+    )
+    return result
 
 
 # =====================
