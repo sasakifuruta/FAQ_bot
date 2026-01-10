@@ -8,7 +8,7 @@ def get_opensearch_client():
     region = session.region_name
     host = os.environ["OPENSEARCH_ENDPOINT"].replace("https://", "")
 
-    credentials = session.get_credentials()
+    credentials = session.get_credentials().get_frozen_credentials()
     awsauth = AWS4Auth(
         credentials.access_key,
         credentials.secret_key,
@@ -17,9 +17,11 @@ def get_opensearch_client():
         session_token=credentials.token,
     )
 
-    return OpenSearch(
+    client = OpenSearch(
         hosts=[{"host": host, "port": 443}],
         http_auth=awsauth,
         use_ssl=True,
         verify_certs=True,
+        connection_class=RequestsHttpConnection
     )
+    return client

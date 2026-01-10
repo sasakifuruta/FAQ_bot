@@ -1,8 +1,8 @@
 fastapi
 mangum
 uvicorn
-opensearch-py
+opensearch-py==2.0.0
 boto3
-requests-aws4auth
+requests-aws4auth==1.1.1
 python-dotenv
 openai
