@@ -21,10 +21,13 @@ def ask_question(question: str, top_k: int = 5) -> dict:
     5. sources 付きで返す
     """
 
+    print("ask_question start")
     client = get_opensearch_client()
+    print("OpenSearch client ready")
 
     # 1. embedding
     query_embedding = embed_text(question)
+    print("Embedding created")
 
     # 2. knn 検索
     response = client.search(
@@ -41,6 +44,7 @@ def ask_question(question: str, top_k: int = 5) -> dict:
             }
         }
     )
+    print("OpenSearch search done")
 
     # 3. CHUNK をまとめて prompt 作成
     chunks = [hit["_source"] for hit in response["hits"]["hits"]]
@@ -61,6 +65,7 @@ def ask_question(question: str, top_k: int = 5) -> dict:
 
     # 4. LLM で回答生成
     answer = generate_answer(prompt)
+    print("LLM answer generated")
     
     sources = [
         {
