@@ -23,6 +23,7 @@ def ask_question(question: str, top_k: int = 5) -> dict:
 
     print("ask_question start")
     client = get_opensearch_client()
+    print("index exists:", client.indices.exists(index=INDEX_NAME))
     print("OpenSearch client ready")
 
     # 1. embedding
