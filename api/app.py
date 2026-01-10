@@ -41,7 +41,14 @@ def ask(req: AskRequest):
         question=req.question,
         top_k=req.top_k,
     )
-    return result
+    return JSONResponse(
+        content=result,
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST,OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+        },
+    )
 
 
 # =====================
