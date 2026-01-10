@@ -61,7 +61,7 @@ def hello():
     return {"message": "hello from lambda"}
 
 # Lambda用ハンドラ（デプロイ用）
-handler = Mangum(app)
+handler = Mangum(app, lifespan="off")
 
 # ローカル開発用：uvicornで立ち上げてブラウザやcurlで確認
 if __name__ == "__main__":
