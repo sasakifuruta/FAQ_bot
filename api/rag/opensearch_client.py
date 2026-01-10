@@ -4,10 +4,11 @@ from opensearchpy import OpenSearch
 from requests_aws4auth import AWS4Auth
 
 def get_opensearch_client():
-    region = os.environ["AWS_REGION"]
+    session = boto3.Session()
+    region = session.region_name
     host = os.environ["OPENSEARCH_ENDPOINT"].replace("https://", "")
 
-    credentials = boto3.Session().get_credentials()
+    credentials = session.get_credentials()
     awsauth = AWS4Auth(
         credentials.access_key,
         credentials.secret_key,
