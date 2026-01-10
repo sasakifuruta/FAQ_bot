@@ -23,7 +23,7 @@ def get_opensearch_client():
         http_auth=awsauth,
         use_ssl=True,
         verify_certs=True,
-        connection_class=RequestsHttpConnection
+        connection_class=RequestsHttpConnection,
         timeout=30,            # ← リクエスト全体のタイムアウトを延長
         max_retries=3,
         retry_on_timeout=True
