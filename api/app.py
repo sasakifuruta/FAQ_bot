@@ -58,9 +58,9 @@ def ask(req: AskRequest):
 # =====================
 
 
-@app.get("/hello")
-def hello():
-    return {"message": "hello from lambda"}
+@app.get("/")
+def root():
+    return {"ok": True}
 
 # Lambda用ハンドラ（デプロイ用）
 handler = Mangum(app, lifespan="off")
