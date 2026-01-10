@@ -4,6 +4,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from mangum import Mangum
 from rag.qa import ask_question
+from fastapi.responses import JSONResponse
+
 
 app = FastAPI()
 
