@@ -1,5 +1,5 @@
 # app.py
-# from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from pydantic import BaseModel
 from mangum import Mangum
@@ -8,17 +8,18 @@ from rag.qa import ask_question
 app = FastAPI()
 
 
-# origins = [
-#     "http://localhost:5173",# Remix dev サーバー
-# ]
+origins = [
+    "http://localhost:5173",# Remix dev サーバー
+    "http://faq-chatbot-frontend0110.s3-website-ap-northeast-1.amazonaws.com"
+]
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=origins,
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class AskRequest(BaseModel):
