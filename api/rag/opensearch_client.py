@@ -24,5 +24,8 @@ def get_opensearch_client():
         use_ssl=True,
         verify_certs=True,
         connection_class=RequestsHttpConnection
+        timeout=30,            # ← リクエスト全体のタイムアウトを延長
+        max_retries=3,
+        retry_on_timeout=True
     )
     return client
