@@ -5,6 +5,7 @@ from rag.embed import embed_text
 from rag.llm import generate_answer
 from opensearchpy import OpenSearch
 from dotenv import load_dotenv
+from rag.opensearch_client import get_opensearch_client
 
 load_dotenv()
 
