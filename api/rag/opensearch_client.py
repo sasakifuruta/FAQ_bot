@@ -2,6 +2,7 @@ import os
 import boto3
 from opensearchpy import OpenSearch
 from requests_aws4auth import AWS4Auth
+from opensearchpy.connection import RequestsHttpConnection
 
 def get_opensearch_client():
     session = boto3.Session()
