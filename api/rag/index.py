@@ -12,29 +12,38 @@ INDEX_NAME = "docs_chunks"
 
 def create_index_if_not_exists(client):
     print("create_index_if_not_exists called")
-    if not client.indices.exists(index=INDEX_NAME):
-        print("index not exists, creating...")
-        client.indices.create(
-            index=INDEX_NAME,
-            body={
-                "settings": {"index": {"knn": True}},
-                "mappings": {
-                    "properties": {
-                        "doc_id": {"type": "keyword"},
-                        "chunk": {"type": "text"},
-                        "tags": {"type": "keyword"},
-                        "embedding": {
-                            "type": "knn_vector",
-                            "dimension": 1536,
-                            "method": {
-                                "name": "hnsw",
-                                "space_type": "cosine",
+    try:
+        if not client.indices.exists(index=INDEX_NAME):
+            print("index not exists, creating...")
+            response = client.indices.create(
+                index=INDEX_NAME,
+                body={
+                    "settings": {
+                        "index": {
+                            "knn": True,
+                            "knn.space_type": "cosinesimil"  # OpenSearch Service向け
+                        }
+                    },
+                    "mappings": {
+                        "properties": {
+                            "doc_id": {"type": "keyword"},
+                            "chunk": {"type": "text"},
+                            "tags": {"type": "keyword"},
+                            "embedding": {
+                                "type": "knn_vector",
+                                "dimension": 1536
                             }
                         }
                     }
                 }
-            }
-        )
+            )
+            print("index creation response:", response)
+        else:
+            print("index already exists")
+    except Exception as e:
+        print("index creation failed:", e)
+        raise
+
 
 def bulk_index_chunks(client, doc_id: str):
     chunks = get_doc_chunks(doc_id)
