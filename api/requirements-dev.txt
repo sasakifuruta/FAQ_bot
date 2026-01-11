@@ -7,5 +7,4 @@ openai
 python-dotenv
 boto3
 opensearch-py
-faiss-cpu
 numpy
