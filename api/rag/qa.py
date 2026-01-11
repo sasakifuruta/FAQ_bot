@@ -51,19 +51,35 @@ def ask_question(question: str, top_k: int = 5) -> dict:
         embeddings.append(emb)
     print("OpenSearch search hits end")
 
-    print("embeddings start")
-    embeddings = np.stack(embeddings)
-    print(f"{len(chunks)} chunks loaded from OpenSearch")
-    print("embeddings end")
+    # print("embeddings start")
+    # embeddings = np.stack(embeddings)
+    # print(f"{len(chunks)} chunks loaded from OpenSearch")
+    # print("embeddings end")
 
-    # cosine 類似度計算（内積で代用）
-    print("cosine similarity calculation start")
-    sims = embeddings @ query_emb  # shape=(num_chunks,)
-    top_idx = np.argsort(-sims)[:top_k]  # 類似度降順に top_k 取得
-    top_chunks = [chunks[i] for i in top_idx]
-    top_scores = sims[top_idx]
-    print(f"Top {top_k} chunks selected")
-    print("cosine similarity calculation end")
+    # # cosine 類似度計算（内積で代用）
+    # print("cosine similarity calculation start")
+    # sims = embeddings @ query_emb  # shape=(num_chunks,)
+    # top_idx = np.argsort(-sims)[:top_k]  # 類似度降順に top_k 取得
+    # top_chunks = [chunks[i] for i in top_idx]
+    # top_scores = sims[top_idx]
+    # print(f"Top {top_k} chunks selected")
+    # print("cosine similarity calculation end")
+    
+    print("embeddings start")
+    if embeddings:
+        embeddings = np.stack(embeddings)
+        # cosine 類似度計算
+        sims = embeddings @ query_emb
+        top_idx = np.argsort(-sims)[:top_k]
+        top_chunks = [chunks[i] for i in top_idx]
+        top_scores = sims[top_idx]
+    else:
+        print("no embeddings")
+        top_chunks = []
+        top_scores = np.array([])
+    print(f"embeddings end.  top_chunks: {top_chunks}")
+    
+
     # context 作成
     print("context creation start")
     context = "\n".join(f"資料{i+1}: {c['chunk']}" for i, c in enumerate(top_chunks))
