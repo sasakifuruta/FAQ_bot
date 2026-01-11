@@ -11,7 +11,9 @@ INDEX_NAME = "docs_chunks"
 
 
 def create_index_if_not_exists(client):
+    print("create_index_if_not_exists called")
     if not client.indices.exists(index=INDEX_NAME):
+        print("index not exists, creating...")
         client.indices.create(
             index=INDEX_NAME,
             body={

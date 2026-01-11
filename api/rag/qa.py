@@ -6,6 +6,7 @@ from rag.llm import generate_answer
 from opensearchpy import OpenSearch
 from dotenv import load_dotenv
 from rag.opensearch_client import get_opensearch_client
+from rag.index import create_index_if_not_exists
 
 load_dotenv()
 
@@ -24,6 +25,10 @@ def ask_question(question: str, top_k: int = 5) -> dict:
     print("ask_question start")
     client = get_opensearch_client()
     print("index exists:", client.indices.exists(index=INDEX_NAME))
+    if not client.indices.exists(index=INDEX_NAME):
+        # raise RuntimeError("OpenSearch index is not initialized")
+        create_index_if_not_exists(client)
+    print("index created(ask_question)")
     print("OpenSearch client ready")
 
     # 1. embedding
