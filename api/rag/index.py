@@ -25,10 +25,8 @@ def create_index_if_not_exists(client):
                             "doc_id": {"type": "keyword"},
                             "chunk": {"type": "text"},
                             "tags": {"type": "keyword"},
-                            "embedding": {
-                                "type": "dense_vector",
-                                "dimension": 1536
-                            }
+                            # ↓ dense_vector → text に変更
+                            "embedding": {"type": "text"}
                         }
                     }
                 }
@@ -55,7 +53,8 @@ def bulk_index_chunks(client, doc_id: str):
                 "doc_id": chunk["PK"],
                 "chunk": chunk["chunk"],
                 "tags": chunk.get("tags", []),
-                "embedding": embedding
+                # ↓ embedding を文字列化
+            "embedding": str(embedding)
             }
         })
 
