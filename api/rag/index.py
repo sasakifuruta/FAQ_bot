@@ -28,8 +28,7 @@ def create_index_if_not_exists(client):
                             "dimension": 1536,
                             "method": {
                                 "name": "hnsw",
-                                "space_type": "cosinesimil",
-                                "engine": "nmslib"
+                                "space_type": "cosine",
                             }
                         }
                     }
