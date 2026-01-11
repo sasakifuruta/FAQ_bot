@@ -19,10 +19,6 @@ def create_index_if_not_exists(client):
                 index=INDEX_NAME,
                 body={
                     "settings": {
-                        "index": {
-                            "knn": True,
-                            "knn.space_type": "cosinesimil"  # OpenSearch Service向け
-                        }
                     },
                     "mappings": {
                         "properties": {
@@ -30,7 +26,7 @@ def create_index_if_not_exists(client):
                             "chunk": {"type": "text"},
                             "tags": {"type": "keyword"},
                             "embedding": {
-                                "type": "knn_vector",
+                                "type": "dense_vector",
                                 "dimension": 1536
                             }
                         }
