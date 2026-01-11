@@ -6,4 +6,4 @@ boto3
 requests-aws4auth==1.1.1
 python-dotenv
 openai
-numpy
+numpy==1.26.3
