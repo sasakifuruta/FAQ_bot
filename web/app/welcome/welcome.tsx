@@ -124,7 +124,7 @@ export default function FAQChatbot() {
     }, [messages]);
 
     async function askAPI(question: string) {
-        const res = await fetch(`${API_BASE_URL}/ask`, {
+        const res = await fetch(`${API_BASE_URL}/api/ask`, {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',
@@ -239,7 +239,7 @@ export default function FAQChatbot() {
 
         .chatbot-container {
           width: 100%;
-          max-width: 480px;
+          max-width: 1300px;
           height: 700px;
           background: #ffffff;
           border-radius: 32px;

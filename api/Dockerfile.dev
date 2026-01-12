@@ -4,8 +4,9 @@ WORKDIR /app
 
 
 # 依存関係
-COPY requirements-dev.txt .
-RUN pip install --no-cache-dir -r requirements-dev.txt
+COPY requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
 
 # アプリコード
 COPY . .

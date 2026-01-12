@@ -15,7 +15,22 @@ INDEX_NAME = "docs_chunks"
 
 def ask_question(question: str, top_k: int = 5) -> dict:
     """
-    NumPy で類似度検索し、LLM で回答生成
+    質問に対する回答を生成する。
+    
+    質問をベクトル化し、OpenSearchから取得したチャンクとの
+    コサイン類似度を計算して、最も関連性の高いtop_k個のチャンクを
+    取得する。その後、これらのチャンクをコンテキストとしてLLMに
+    送信し、回答を生成する。
+    
+    Args:
+        question (str): ユーザーの質問
+        top_k (int, optional): 取得する関連チャンクの数。デフォルトは5。
+        
+    Returns:
+        dict: 以下のキーを含む辞書
+            - answer (str): LLMが生成した回答
+            - sources (list[dict]): 使用されたチャンクのリスト。
+                                    各要素はdoc_id、chunk、scoreを含む
     """
     print("ask_question start")
     client = get_opensearch_client()
@@ -50,20 +65,6 @@ def ask_question(question: str, top_k: int = 5) -> dict:
         emb /= np.linalg.norm(emb)  # L2 正規化
         embeddings.append(emb)
     print("OpenSearch search hits end")
-
-    # print("embeddings start")
-    # embeddings = np.stack(embeddings)
-    # print(f"{len(chunks)} chunks loaded from OpenSearch")
-    # print("embeddings end")
-
-    # # cosine 類似度計算（内積で代用）
-    # print("cosine similarity calculation start")
-    # sims = embeddings @ query_emb  # shape=(num_chunks,)
-    # top_idx = np.argsort(-sims)[:top_k]  # 類似度降順に top_k 取得
-    # top_chunks = [chunks[i] for i in top_idx]
-    # top_scores = sims[top_idx]
-    # print(f"Top {top_k} chunks selected")
-    # print("cosine similarity calculation end")
     
     print("embeddings start")
     if embeddings:

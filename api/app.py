@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from mangum import Mangum
 from rag.qa import ask_question
+from rag.bootstrap import bootstrap_opensearch
 from fastapi.responses import JSONResponse
 
 
@@ -29,16 +30,31 @@ class AskRequest(BaseModel):
     top_k: int = 5
 
 
-# @app.on_event("startup")
-# def on_startup():
-#     try:
-#         init_index()
-#     except Exception as e:
-#         print(f"[WARN] index init failed: {e}")
+@app.on_event("startup")
+def on_startup():
+    """
+    FastAPIアプリケーション起動時に実行される関数。
+    
+    OpenSearchのインデックスを初期化する。エラーが発生した場合でも
+    アプリケーションの起動は継続する（警告のみ出力）。
+    """
+    try:
+        bootstrap_opensearch()
+    except Exception as e:
+        print(f"[WARN] index init failed: {e}")
 
 
 @app.post("/api/ask")
 def ask(req: AskRequest):
+    """
+    質問に対する回答を生成するAPIエンドポイント。
+    
+    Args:
+        req (AskRequest): 質問内容とtop_kパラメータを含むリクエスト
+        
+    Returns:
+        JSONResponse: 回答と関連するソース情報を含むJSONレスポンス
+    """
     result = ask_question(
         question=req.question,
         top_k=req.top_k,
@@ -60,6 +76,12 @@ def ask(req: AskRequest):
 
 @app.get("/")
 def root():
+    """
+    ヘルスチェック用のルートエンドポイント。
+    
+    Returns:
+        dict: {"ok": True} を含む辞書
+    """
     return {"ok": True}
 
 # Lambda用ハンドラ（デプロイ用）

@@ -11,6 +11,21 @@ INDEX_NAME = "docs_chunks"
 
 
 def create_index_if_not_exists(client):
+    """
+    OpenSearchのインデックスが存在しない場合に作成する。
+    
+    インデックス名は"docs_chunks"で、以下のマッピングを持つ:
+    - doc_id: keyword型
+    - chunk: text型
+    - tags: keyword型
+    - embedding: text型（ベクトルを文字列化して保存）
+    
+    Args:
+        client: OpenSearchクライアントインスタンス
+        
+    Raises:
+        Exception: インデックス作成に失敗した場合
+    """
     print("create_index_if_not_exists called")
     try:
         if not client.indices.exists(index=INDEX_NAME):
@@ -40,6 +55,19 @@ def create_index_if_not_exists(client):
 
 
 def bulk_index_chunks(client, doc_id: str):
+    """
+    指定されたドキュメントIDのチャンクをOpenSearchに一括インデックスする。
+    
+    DynamoDBからチャンクを取得し、各チャンクをベクトル化して
+    OpenSearchにインデックスする。
+    
+    Args:
+        client: OpenSearchクライアントインスタンス
+        doc_id (str): インデックスするドキュメントID
+        
+    Returns:
+        tuple: (成功件数, 失敗したアクションのリスト)のタプル
+    """
     chunks = get_doc_chunks(doc_id)
     actions = []
 

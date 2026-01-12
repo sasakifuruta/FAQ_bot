@@ -1,39 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// FAQ データベース
-const FAQ_DATABASE = [
-    {
-        id: 1,
-        question: '営業時間を教えてください',
-        answer: '平日は9:00〜18:00、土日祝日は10:00〜17:00の営業となっております。年末年始は休業させていただきます。',
-        keywords: ['営業', '時間', '営業時間', '開店', '閉店']
-    },
-    {
-        id: 2,
-        question: '配送料はいくらですか？',
-        answer: '全国一律550円です。5,000円以上のご購入で送料無料となります。',
-        keywords: ['配送', '送料', '料金', '無料']
-    },
-    {
-        id: 3,
-        question: '返品・交換はできますか？',
-        answer: '商品到着後7日以内であれば、未開封・未使用に限り返品・交換を承ります。お客様都合の場合は返送料をご負担ください。',
-        keywords: ['返品', '交換', '返金', 'キャンセル']
-    },
-    {
-        id: 4,
-        question: '会員登録は必要ですか？',
-        answer: '会員登録なしでもご購入いただけますが、会員登録いただくとポイント付与や購入履歴の確認などの特典がございます。',
-        keywords: ['会員', '登録', 'アカウント', 'メンバー']
-    },
-    {
-        id: 5,
-        question: '支払い方法は何がありますか？',
-        answer: 'クレジットカード、銀行振込、代金引換、コンビニ決済、PayPay、楽天ペイに対応しております。',
-        keywords: ['支払い', '決済', 'クレジット', '振込', '代引き', 'コンビニ']
-    }
-];
 
 // メッセージタイプ
 type Message = {
@@ -58,6 +25,7 @@ export default function FAQChatbot() {
     const [isTyping, setIsTyping] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
     
     // メッセージを自動スクロール
@@ -66,7 +34,7 @@ export default function FAQChatbot() {
     }, [messages]);
 
     async function askAPI(question: string) {
-        const res = await fetch('http://localhost:8000/api/ask', {
+        const res = await fetch(`${API_BASE_URL}/api/ask`, {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',
@@ -181,7 +149,7 @@ export default function FAQChatbot() {
 
         .chatbot-container {
           width: 100%;
-          max-width: 480px;
+          max-width: 800px;
           height: 700px;
           background: #ffffff;
           border-radius: 32px;

@@ -8,7 +8,16 @@ client = OpenAI()
 
 def embed_text(text: str) -> list[float]:
     """
-    単一テキストを embedding ベクトルに変換する
+    単一テキストをベクトルに変換する。
+    
+    OpenAIのtext-embedding-3-smallモデルを使用してテキストを
+    埋め込みベクトルに変換する。
+    
+    Args:
+        text (str): ベクトル化するテキスト
+        
+    Returns:
+        list[float]: テキストの埋め込みベクトル
     """
     print("embed_text called")
     response = client.embeddings.create(
@@ -21,7 +30,16 @@ def embed_text(text: str) -> list[float]:
 
 def embed_chunks(chunks: list[dict]) -> list[dict]:
     """
-    DynamoDB から取得した CHUNK 一覧に embedding を付与する
+    DynamoDBから取得したチャンク一覧に埋め込みベクトルを付与する。
+    
+    各チャンクの"chunk"フィールドのテキストをベクトル化し、
+    "embedding"フィールドとして追加する。
+    
+    Args:
+        chunks (list[dict]): チャンク情報のリスト。各要素には"chunk"キーが含まれる
+        
+    Returns:
+        list[dict]: 各チャンクに"embedding"キーが追加されたリスト
     """
     for chunk in chunks:
         text = chunk["chunk"]
